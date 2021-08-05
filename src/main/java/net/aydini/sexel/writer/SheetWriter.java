@@ -9,7 +9,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import net.aydini.mom.util.reflection.ReflectionUtil;
-import net.aydini.sexel.annotation.SexelIgnore;
 import net.aydini.sexel.configuration.ConfigurationProperty;
 import net.aydini.sexel.configuration.ConfigurationProperty.Direction;
 import net.aydini.sexel.workbook.WorkBookHolder;
@@ -54,7 +53,7 @@ public class SheetWriter {
 
 	public void write() {
 		configSheet();
-		final Set<Field> fields = ReflectionUtil.getClassFields(sheetData.get(0).getClass(),field-> !field.isAnnotationPresent(SexelIgnore.class));
+		final Set<Field> fields = ReflectionUtil.getClassFields(sheetData.get(0).getClass());
 		if(!configurationProperty.isSkipHeader())
 			writeHeader(fields, rowNnumber.getAndIncrement());
 		sheetData.stream().forEach(item->writeData(fields,item,rowNnumber.getAndIncrement()));

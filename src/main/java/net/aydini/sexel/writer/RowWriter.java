@@ -1,15 +1,14 @@
 package net.aydini.sexel.writer;
 
 import java.lang.reflect.Field;
-import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
-import net.aydini.sexel.workbook.WorkBookHolder;
 import net.aydini.mom.util.reflection.ReflectionUtil;
+import net.aydini.sexel.annotation.SexelField;
+import net.aydini.sexel.workbook.WorkBookHolder;
 
 /**
  * 
@@ -29,23 +28,21 @@ public class RowWriter {
 	}
 
 	public void write(Set<Field> fields, Object rowData,boolean isHeader)  {
-		AtomicInteger cellNumber = new AtomicInteger(0);
 		for (Field field : fields) {
-			Cell cell = row.createCell(cellNumber.getAndIncrement());
+			Cell cell = row.createCell(field.getAnnotation(SexelField.class).columnIndex());
 			new CellWriter(cell, workBookHolder).write(field, getCellValue(field, rowData, isHeader),isHeader);
 		}
 	}
 
-	private Optional<Object> getCellValue(Field field, Object rowData, boolean isHeader) {
+	private Object getCellValue(Field field, Object rowData, boolean isHeader) {
 		if (isHeader)
-			return Optional.empty();
-
+			return null;
 		try {
-			return Optional.of(ReflectionUtil.getFieldValueFromObject(field, rowData));
+			return ReflectionUtil.getFieldValueFromObject(field, rowData);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return Optional.empty();
+		return null;
 	}
 
 }
