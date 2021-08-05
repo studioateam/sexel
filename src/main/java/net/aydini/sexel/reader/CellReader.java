@@ -12,7 +12,7 @@ import net.aydini.sexel.configuration.ConfigurationProperty;
  * @author <a href="mailto:hi@aydini.net">Aydin Nasrollahpour </a>
  *
  */
-public class CellReader extends AbstractReader {
+public class CellReader extends AbstractReader<Object> {
 
 	private final Cell cell;
 

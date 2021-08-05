@@ -13,7 +13,7 @@ import net.aydini.sexel.configuration.ConfigurationProperty;
  * @author <a href="mailto:hi@aydini.net">Aydin Nasrollahpour </a>
  *
  */
-public class SheetReader extends AbstractReader{
+public class SheetReader extends AbstractReader<List<Object>>{
 
 	
 	private final Sheet sheet;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.aydini.sexel.reader.SexelReader;
+import net.aydini.sexel.writer.SexelWriter;
 
 public class Application {
 
@@ -36,10 +37,10 @@ public class Application {
 		aydins.add(aydin3);
 		aydins.add(aydin3);
 		
-//		new SexelWriter().setFilePath("a.xlsx").addSheetData(aydins).write();
+		new SexelWriter().setFilePath("a.xlsx").addSheetData(aydins).addSheetData(aydins).write();
 		
 		
 		
-		new SexelReader().setFilePath("a.xlsx").setOutputClass(Aydin.class).setSheetName("Aydin").doRead().forEach(System.out::println);
+		new SexelReader().setFilePath("a.xlsx").setOutputClass(Aydin.class).setSheetName("Aydin").setSheetName("Aydin2").doRead().forEach(System.out::println);
 	}
 }

@@ -16,7 +16,7 @@ import net.aydini.sexel.configuration.ConfigurationProperty;
  * @author <a href="mailto:hi@aydini.net">Aydin Nasrollahpour </a>
  *
  */
-public class RowReader extends AbstractReader {
+public class RowReader extends AbstractReader<Object> {
 
 	private final Row row;
 

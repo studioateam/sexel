@@ -23,9 +23,7 @@ import net.aydini.sexel.exception.SexelException;
  * @author <a href="mailto:hi@aydini.net">Aydin Nasrollahpour </a>
  *
  */
-public class SexelReader{
-
-	private ConfigurationProperty configurationProperty = new ConfigurationProperty().setStartRow(1);
+public class SexelReader extends AbstractReader<List<Object>> {
 
 	private String filePath;
 
@@ -33,13 +31,19 @@ public class SexelReader{
 
 	private final Set<String> sheetsNames;
 
+	private Workbook workbook;
+
 	public SexelReader() {
+		this(new ConfigurationProperty().setStartRow(1));
+	}
+
+	public SexelReader(ConfigurationProperty configurationProperty) {
+		super(configurationProperty);
 		sheetsNames = new HashSet<>();
 	}
 
 	public SexelReader setFilePath(String filePath) {
 		this.filePath = filePath;
-		validateFilePath();
 		return this;
 	}
 
@@ -50,19 +54,13 @@ public class SexelReader{
 		return this;
 	}
 
-	public SexelReader setConfigurationProperty(ConfigurationProperty configurationProperty) {
-		if (configurationProperty != null)
-			this.configurationProperty = configurationProperty;
-		return this;
-	}
-
 	public SexelReader setOutputClass(Class<?> outputClass) {
 		if (outputClass != null)
 			this.outputClass = outputClass;
 		return this;
 	}
 
-	private void validateFilePath() {
+	private void validate() {
 		if (StringUtils.isAllEmpty(filePath))
 			throw new SexelException("invalid file path");
 		if (!FilenameUtils.getExtension(filePath).toLowerCase().equals(Constants.ACCEPTABLE_EXCEL_TYPE))
@@ -70,22 +68,22 @@ public class SexelReader{
 	}
 
 	public List<Object> doRead() {
-		validateFilePath();
+		validate();
+		initWorkBook();
 		List<Object> list = new ArrayList<>();
 		sheetsNames.forEach(item -> list.addAll(doRead(item)));
 		return list;
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<Object> doRead(String sheetName) {
-		Workbook workbook = initWorkBook();
+
 		Sheet sheet = workbook.getSheet(sheetName);
-		return (List<Object>) new SheetReader(sheet, configurationProperty).setOutputClass(outputClass).read();
+		return (List<Object>) new SheetReader(sheet, getConfigurationProperty()).setOutputClass(outputClass).read();
 	}
 
-	private Workbook initWorkBook() {
+	private void initWorkBook() {
 		try {
-			return new HSSFWorkbook(new FileInputStream(new File(filePath)));
+			workbook = new HSSFWorkbook(new FileInputStream(new File(filePath)));
 		} catch (IOException e) {
 			throw new SexelException(e.getMessage(), e);
 		}
