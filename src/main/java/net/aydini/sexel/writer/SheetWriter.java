@@ -31,7 +31,7 @@ public class SheetWriter {
 	
 	private ConfigurationProperty configurationProperty;
 	
-	AtomicInteger rowNnumber = new AtomicInteger(0);
+	AtomicInteger rowNnumber;
 
 	SheetWriter(WorkBookHolder workBookHolder, Sheet sheet) {
 		this.workBookHolder = workBookHolder;
@@ -76,6 +76,7 @@ public class SheetWriter {
 	
 	private void configSheet()
 	{
+		rowNnumber = new AtomicInteger(configurationProperty.getStartRow());
 		if(configurationProperty.getDirection()==Direction.RTL)
 			sheet.setRightToLeft(true);
 	}
