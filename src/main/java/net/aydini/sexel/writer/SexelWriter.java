@@ -1,4 +1,4 @@
-package net.aydini.sexel.workbook.writer;
+package net.aydini.sexel.writer;
 
 import java.io.File;
 import java.io.FileOutputStream;

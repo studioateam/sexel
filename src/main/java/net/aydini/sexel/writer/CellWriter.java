@@ -1,4 +1,4 @@
-package net.aydini.sexel.workbook.writer;
+package net.aydini.sexel.writer;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
@@ -28,7 +28,7 @@ public class CellWriter {
 	private final WorkBookHolder workBookHolder;
 	
 	
-	public CellWriter(Cell cell, WorkBookHolder workBookHolder) {
+	CellWriter(Cell cell, WorkBookHolder workBookHolder) {
 		super();
 		this.cell = cell;
 		this.workBookHolder = workBookHolder;

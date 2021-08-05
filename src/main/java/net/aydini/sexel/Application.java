@@ -3,7 +3,7 @@ package net.aydini.sexel;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.aydini.sexel.workbook.writer.SexelWriter;
+import net.aydini.sexel.writer.SexelWriter;
 
 public class Application {
 

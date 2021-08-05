@@ -1,4 +1,4 @@
-package net.aydini.sexel.workbook.writer;
+package net.aydini.sexel.writer;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -33,7 +33,7 @@ public class SheetWriter {
 	
 	AtomicInteger rowNnumber = new AtomicInteger(0);
 
-	public SheetWriter(WorkBookHolder workBookHolder, Sheet sheet) {
+	SheetWriter(WorkBookHolder workBookHolder, Sheet sheet) {
 		this.workBookHolder = workBookHolder;
 		this.sheet = sheet;
 	}
