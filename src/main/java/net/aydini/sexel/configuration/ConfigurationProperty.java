@@ -21,8 +21,9 @@ public class ConfigurationProperty {
 
 
 
-	public void setDirection(Direction direction) {
+	public ConfigurationProperty setDirection(Direction direction) {
 		this.direction = direction;
+		return this;
 	}
 
 
@@ -33,8 +34,9 @@ public class ConfigurationProperty {
 
 
 
-	public void setSkipHeader(boolean skipHeader) {
+	public ConfigurationProperty setSkipHeader(boolean skipHeader) {
 		this.skipHeader = skipHeader;
+		return this;
 	}
 
 	public int getStartRow() {
@@ -43,8 +45,9 @@ public class ConfigurationProperty {
 
 
 
-	public void setStartRow(int startRow) {
+	public ConfigurationProperty setStartRow(int startRow) {
 		this.startRow = startRow;
+		return this;
 	}
 
 
