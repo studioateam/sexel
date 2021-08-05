@@ -28,9 +28,6 @@ public class CellWriter {
 	private final WorkBookHolder workBookHolder;
 	
 	
-	private CellStyle defaultCellStyle;
-	
-	
 	public CellWriter(Cell cell, WorkBookHolder workBookHolder) {
 		super();
 		this.cell = cell;
@@ -73,7 +70,7 @@ public class CellWriter {
 		Object cellValue = optionalCellValue.orElse(null);
 		if(isHeader)
 			cellValue =field.getName();
-		cell.setCellStyle(getDefaultStyle());
+		cell.setCellStyle(getDefaultStyle(isHeader));
 		if (cellValue == null)
 			cell.setBlank();
 		else
@@ -89,9 +86,9 @@ public class CellWriter {
 	}
 	
 	
-	private CellStyle getDefaultStyle() {
-		if (defaultCellStyle == null)
-			defaultCellStyle = new DefaultCellStyler().getCellStyle(workBookHolder, new DefaultFontCreator());
-		return defaultCellStyle;
+	private CellStyle getDefaultStyle(boolean isHeader) {
+		if (isHeader)
+			return new DefaultCellStyler().getHeaderCellStyle(workBookHolder, new DefaultFontCreator());
+		return new DefaultCellStyler().getCellStyle(workBookHolder, new DefaultFontCreator());
 	}
 }

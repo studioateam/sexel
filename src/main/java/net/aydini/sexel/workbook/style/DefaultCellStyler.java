@@ -18,6 +18,10 @@ public class DefaultCellStyler implements CellStyler {
 	public CellStyle getCellStyle(WorkBookHolder workBookHolder, FontCreator fontCreator) {
 		CellStyle cellStyle = init(workBookHolder);
 		cellStyle.setFont(fontCreator.createCellFont(workBookHolder));
+		cellStyle.setBorderBottom(BorderStyle.THIN);
+		cellStyle.setBorderLeft(BorderStyle.THIN);
+		cellStyle.setBorderRight(BorderStyle.THIN);
+		cellStyle.setBorderTop(BorderStyle.THIN);
 		return cellStyle;
 
 	}
@@ -25,6 +29,10 @@ public class DefaultCellStyler implements CellStyler {
 	public CellStyle getHeaderCellStyle(WorkBookHolder workBookHolder, FontCreator fontCreator) {
 		CellStyle cellStyle = init(workBookHolder);
 		cellStyle.setFont(fontCreator.createHeaderCellFont(workBookHolder));
+		cellStyle.setBorderBottom(BorderStyle.MEDIUM);
+		cellStyle.setBorderLeft(BorderStyle.MEDIUM);
+		cellStyle.setBorderRight(BorderStyle.MEDIUM);
+		cellStyle.setBorderTop(BorderStyle.MEDIUM);
 		return cellStyle;
 	}
 
@@ -33,10 +41,6 @@ public class DefaultCellStyler implements CellStyler {
 			throw new RuntimeException("");
 		CellStyle cellStyle = workBookHolder.createCellStyle();
 		cellStyle.setAlignment(HorizontalAlignment.CENTER);
-		cellStyle.setBorderBottom(BorderStyle.MEDIUM);
-		cellStyle.setBorderLeft(BorderStyle.MEDIUM);
-		cellStyle.setBorderRight(BorderStyle.MEDIUM);
-		cellStyle.setBorderTop(BorderStyle.MEDIUM);
 		return cellStyle;
 	}
 
