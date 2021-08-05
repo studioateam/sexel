@@ -24,20 +24,46 @@ public class CellValueExtractor {
 		if (clazz.equals(Date.class))
 			return cell.getDateCellValue();
 		if (clazz.equals(Double.class))
-			return cell.getNumericCellValue();
+			return getDouble(cell);
 		if (clazz.equals(Integer.class))
 			return getInteger(cell);
-		
-		
 		if (clazz.equals(BigDecimal.class))
-			return new BigDecimal(cell.getNumericCellValue());
+			return getBigDecimal(cell);
 		if (clazz.equals(Long.class))
-			return new Double(cell.getNumericCellValue()).longValue();
+			getLong(cell);
 		if (clazz.equals(Float.class))
-			return new Double(cell.getNumericCellValue()).floatValue();
+			return getFloat(cell);
 		return cell.getStringCellValue();
 	}
+	
+	
+	private static Double getDouble(Cell cell) {
+		if (cell.getCellType() == CellType.NUMERIC)
+			return new Double(cell.getNumericCellValue());
+		String value = cell.getStringCellValue();
+		return StringUtils.isNotEmpty(value) ? Double.parseDouble(value) : null;
+	}
+	
+	private static Float getFloat(Cell cell) {
+		if (cell.getCellType() == CellType.NUMERIC)
+			return new Double(cell.getNumericCellValue()).floatValue();
+		String value = cell.getStringCellValue();
+		return StringUtils.isNotEmpty(value) ? Float.parseFloat(value) : null;
+	}
+	private static Long getLong(Cell cell) {
+		if (cell.getCellType() == CellType.NUMERIC)
+			return new Double(cell.getNumericCellValue()).longValue();
+		String value = cell.getStringCellValue();
+		return StringUtils.isNotEmpty(value) ? Long.parseLong(value) : null;
+	}
 
+	private static BigDecimal getBigDecimal(Cell cell) {
+		if (cell.getCellType() == CellType.NUMERIC)
+			return new BigDecimal(cell.getNumericCellValue());
+		String value = cell.getStringCellValue();
+		return StringUtils.isNotEmpty(value) ? new BigDecimal(value) : null;
+	}
+	
 	private static Integer getInteger(Cell cell) {
 		if (cell.getCellType() == CellType.NUMERIC)
 			return new Double(cell.getNumericCellValue()).intValue();
