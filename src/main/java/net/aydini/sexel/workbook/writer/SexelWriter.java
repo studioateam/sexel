@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import net.aydini.sexel.configuration.ConfigurationProperty;
 import net.aydini.sexel.constant.Constants;
 import net.aydini.sexel.workbook.WorkBookHolder;
 
@@ -24,8 +25,9 @@ public class SexelWriter {
 
 	private Workbook workbook;
 
-	@SuppressWarnings("rawtypes")
-	private Map<String, List> sheetData;
+	private ConfigurationProperty ConfigurationProperty = new ConfigurationProperty();
+
+	private Map<String, List<Object>> sheetData;
 
 	private String filePath;
 
@@ -39,29 +41,34 @@ public class SexelWriter {
 		return this;
 	}
 
-	@SuppressWarnings("rawtypes")
-	public SexelWriter addSheetData(String sheetName, List data) {
+	public SexelWriter setConfigurationProperty(ConfigurationProperty configurationProperty) {
+		if (configurationProperty != null)
+			this.ConfigurationProperty = configurationProperty;
+		return this;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> SexelWriter addSheetData(String sheetName, List<T> data) {
 		validateData(data);
 		if (StringUtils.isEmpty(sheetName))
 			addSheetData(data);
 		else
-			sheetData.put(sheetName, data);
+			sheetData.put(sheetName, (List<Object>)data);
 		return this;
 	}
 
-	@SuppressWarnings("rawtypes")
-	public SexelWriter addSheetData(List data) {
+	@SuppressWarnings("unchecked")
+	public <T> SexelWriter addSheetData(List<T> data) {
 		validateData(data);
 		String sheetName = data.get(0).getClass().getSimpleName();
 		if (sheetData.isEmpty())
-			sheetData.put(sheetName, data);
+			sheetData.put(sheetName, (List<Object>) data);
 		else
-			sheetData.put(sheetName + (sheetData.size() + 1), data);
+			sheetData.put(sheetName + (sheetData.size() + 1), (List<Object>) data);
 		return this;
 	}
 
-	@SuppressWarnings("rawtypes")
-	private void validateData(List data) {
+	private <T> void validateData(List<T> data) {
 		if (CollectionUtils.isEmpty(data))
 			throw new RuntimeException("empty Data");
 	}
@@ -99,7 +106,8 @@ public class SexelWriter {
 	private void setDataToSheet() {
 		WorkBookHolder workBookHolder = new WorkBookHolder(workbook);
 		sheetData.entrySet().stream()
-				.map(item -> new SheetWriter(item.getValue(), workBookHolder, workbook.createSheet(item.getKey())))
+				.map(item -> new SheetWriter(workBookHolder, workbook.createSheet(item.getKey()))
+						.setConfigurationProperty(ConfigurationProperty).setSheetData(item.getValue()))
 				.forEach(SheetWriter::write);
 	}
 

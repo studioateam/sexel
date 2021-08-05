@@ -21,27 +21,39 @@ import net.aydini.sexel.workbook.WorkBookHolder;
  */
 public class SheetWriter {
 	
-	private ConfigurationProperty configurationProperty = new ConfigurationProperty();
+	
 
 	private final Sheet sheet;
 
 	private final WorkBookHolder workBookHolder;
 
-	@SuppressWarnings("rawtypes")
-	private final List sheetData;
+	private List<Object> sheetData;
+	
+	private ConfigurationProperty configurationProperty;
 	
 	AtomicInteger rowNnumber = new AtomicInteger(0);
 
-	@SuppressWarnings("rawtypes")
-	public SheetWriter(List sheetData, WorkBookHolder workBookHolder, Sheet sheet) {
-		this.sheetData = sheetData;
+	public SheetWriter(WorkBookHolder workBookHolder, Sheet sheet) {
 		this.workBookHolder = workBookHolder;
 		this.sheet = sheet;
 	}
+	
+	public SheetWriter setSheetData(List<Object> sheetData)
+	{
+		this.sheetData = sheetData;
+		return this;
+	}
+	
+	
+	public SheetWriter setConfigurationProperty(ConfigurationProperty configurationProperty)
+	{
+		this.configurationProperty = configurationProperty;
+		return this;
+	}
+	
 
-	@SuppressWarnings("unchecked")
 	public void write() {
-		config();
+		configSheet();
 		final Set<Field> fields = ReflectionUtil.getClassFields(sheetData.get(0).getClass(),field-> !field.isAnnotationPresent(SexelIgnore.class));
 		if(!configurationProperty.isSkipHeader())
 			writeHeader(fields, rowNnumber.getAndIncrement());
@@ -62,7 +74,7 @@ public class SheetWriter {
 		}
 	}
 	
-	private void config()
+	private void configSheet()
 	{
 		if(configurationProperty.getDirection()==Direction.RTL)
 			sheet.setRightToLeft(true);
