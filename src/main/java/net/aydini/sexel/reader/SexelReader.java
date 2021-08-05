@@ -16,13 +16,14 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import net.aydini.sexel.configuration.ConfigurationProperty;
 import net.aydini.sexel.constant.Constants;
+import net.aydini.sexel.exception.SexelException;
 
 /**
  * 
  * @author <a href="mailto:hi@aydini.net">Aydin Nasrollahpour </a>
  *
  */
-public class SexelReader {
+public class SexelReader{
 
 	private ConfigurationProperty configurationProperty = new ConfigurationProperty().setStartRow(1);
 
@@ -63,31 +64,30 @@ public class SexelReader {
 
 	private void validateFilePath() {
 		if (StringUtils.isAllEmpty(filePath))
-			throw new RuntimeException("invalid file path");
+			throw new SexelException("invalid file path");
 		if (!FilenameUtils.getExtension(filePath).toLowerCase().equals(Constants.ACCEPTABLE_EXCEL_TYPE))
-			throw new RuntimeException("only .xlsx is supported");
+			throw new SexelException("only .xlsx is supported");
 	}
-	
-	
-	public List<Object> read()
-	{
+
+	public List<Object> doRead() {
 		validateFilePath();
 		List<Object> list = new ArrayList<>();
-		sheetsNames.forEach(item->list.addAll(read(item)));
+		sheetsNames.forEach(item -> list.addAll(doRead(item)));
 		return list;
 	}
 
-	private List<Object> read(String sheetName) {
+	@SuppressWarnings("unchecked")
+	private List<Object> doRead(String sheetName) {
 		Workbook workbook = initWorkBook();
 		Sheet sheet = workbook.getSheet(sheetName);
-		return new SheetReader(configurationProperty, sheet,outputClass).read();
+		return (List<Object>) new SheetReader(sheet, configurationProperty).setOutputClass(outputClass).read();
 	}
 
 	private Workbook initWorkBook() {
 		try {
 			return new HSSFWorkbook(new FileInputStream(new File(filePath)));
 		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage(), e);
+			throw new SexelException(e.getMessage(), e);
 		}
 	}
 

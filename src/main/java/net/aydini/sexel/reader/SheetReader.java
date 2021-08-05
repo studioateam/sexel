@@ -13,31 +13,34 @@ import net.aydini.sexel.configuration.ConfigurationProperty;
  * @author <a href="mailto:hi@aydini.net">Aydin Nasrollahpour </a>
  *
  */
-public class SheetReader {
+public class SheetReader extends AbstractReader{
 
-	
-	private final ConfigurationProperty configurationProperty;
 	
 	private final Sheet sheet;
 	
-	private final  Class<?> outputClass;
+	private  Class<?> outputClass;
 
-	public SheetReader(ConfigurationProperty configurationProperty, Sheet sheet,Class<?> outputClass) {
-		super();
-		this.configurationProperty = configurationProperty;
+	public SheetReader(Sheet sheet,ConfigurationProperty configurationProperty) {
+		super(configurationProperty);
 		this.sheet = sheet;
-		this.outputClass=outputClass;
 	}
 	
-	public List<Object> read()
+	public SheetReader setOutputClass(Class<?> outputClass)
+	{
+		this.outputClass = outputClass;
+		return this;
+	}
+
+	
+	public List<Object> doRead()
 	{
 		int rowCount = sheet.getLastRowNum() - sheet.getFirstRowNum();
-		if(configurationProperty.getStartRow() >rowCount)
+		if(getConfigurationProperty().getStartRow() >rowCount)
 			throw new RuntimeException("wrong configuration with start row");
 		List<Object> list = new ArrayList<>();
-		for (int i = configurationProperty.getStartRow(); i < rowCount + 1; i++) {
+		for (int i = getConfigurationProperty().getStartRow(); i < rowCount + 1; i++) {
 			Row row = sheet.getRow(i);
-			list.add(new RowReader(row, outputClass).read());
+			list.add(new RowReader(row, getConfigurationProperty()).setOutputClass(outputClass).read());
 		}
 		return list;
 	}

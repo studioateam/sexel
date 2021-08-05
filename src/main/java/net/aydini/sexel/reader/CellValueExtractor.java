@@ -8,6 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 
+import net.aydini.sexel.exception.SexelException;
+
 /**
  * 
  * @author <a href="mailto:hi@aydini.net">Aydin Nasrollahpour </a>
@@ -15,7 +17,16 @@ import org.apache.poi.ss.usermodel.CellType;
  */
 public class CellValueExtractor {
 
-	public static Object extract(Class<?> clazz, Cell cell) {
+	public static Object extractCellValue(Class<?> clazz, Cell cell) {
+		try {
+			return extract(clazz, cell);
+		} catch (Exception e) {
+			
+			throw new SexelException(e.getMessage(),e);
+		}
+	}
+
+	private static Object extract(Class<?> clazz, Cell cell) {
 
 		if (clazz.equals(Boolean.class))
 			return cell.getBooleanCellValue();
@@ -35,21 +46,21 @@ public class CellValueExtractor {
 			return getFloat(cell);
 		return cell.getStringCellValue();
 	}
-	
-	
+
 	private static Double getDouble(Cell cell) {
 		if (cell.getCellType() == CellType.NUMERIC)
 			return new Double(cell.getNumericCellValue());
 		String value = cell.getStringCellValue();
 		return StringUtils.isNotEmpty(value) ? Double.parseDouble(value) : null;
 	}
-	
+
 	private static Float getFloat(Cell cell) {
 		if (cell.getCellType() == CellType.NUMERIC)
 			return new Double(cell.getNumericCellValue()).floatValue();
 		String value = cell.getStringCellValue();
 		return StringUtils.isNotEmpty(value) ? Float.parseFloat(value) : null;
 	}
+
 	private static Long getLong(Cell cell) {
 		if (cell.getCellType() == CellType.NUMERIC)
 			return new Double(cell.getNumericCellValue()).longValue();
@@ -63,7 +74,7 @@ public class CellValueExtractor {
 		String value = cell.getStringCellValue();
 		return StringUtils.isNotEmpty(value) ? new BigDecimal(value) : null;
 	}
-	
+
 	private static Integer getInteger(Cell cell) {
 		if (cell.getCellType() == CellType.NUMERIC)
 			return new Double(cell.getNumericCellValue()).intValue();

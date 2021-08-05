@@ -9,36 +9,43 @@ import org.apache.poi.ss.usermodel.Row;
 
 import net.aydini.mom.util.reflection.ReflectionUtil;
 import net.aydini.sexel.annotation.SexelField;
+import net.aydini.sexel.configuration.ConfigurationProperty;
 
 /**
  * 
  * @author <a href="mailto:hi@aydini.net">Aydin Nasrollahpour </a>
  *
  */
-public class RowReader {
+public class RowReader extends AbstractReader {
 
 	private final Row row;
 
-	private final Class<?> outputClass;
+	private Class<?> outputClass;
+	
 
-	public RowReader(Row row, Class<?> outputClass) {
-		super();
+	RowReader(Row row, ConfigurationProperty configurationProperty) {
+		super(configurationProperty);
 		this.row = row;
+	}
+	
+	public RowReader setOutputClass(Class<?> outputClass)
+	{
 		this.outputClass = outputClass;
+		return this;
 	}
 
-	public Object read() {
+	public Object doRead() {
 		Set<Field> outputClassFields = ReflectionUtil.getClassFields(outputClass);
 		validate(outputClassFields);
 		final Object object = ReflectionUtil.instantiate(outputClass);
-		outputClassFields.stream().filter(item->item.isAnnotationPresent(SexelField.class)).forEach(item->read(item,object));
+		outputClassFields.stream().filter(item->item.isAnnotationPresent(SexelField.class)).forEach(item->doRead(item,object));
 		return object;
 	}
-	private void read(Field field,Object object)
+	private void doRead(Field field,Object object)
 	{
 		SexelField sexelField = field.getAnnotation(SexelField.class);
 		Cell cell = row.getCell(sexelField.columnIndex());
-		new CellReader(cell, field, object).read();
+		new CellReader(cell,getConfigurationProperty()).setField(field).setMapedObject(object).read();
 	}
 
 	private void validate(Set<Field> outputClassFields) {

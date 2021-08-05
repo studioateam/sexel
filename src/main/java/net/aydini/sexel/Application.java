@@ -3,7 +3,7 @@ package net.aydini.sexel;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.aydini.sexel.writer.SexelWriter;
+import net.aydini.sexel.reader.SexelReader;
 
 public class Application {
 
@@ -15,18 +15,17 @@ public class Application {
 		Aydin aydin = new Aydin();
 		aydin.setName("aydin");
 		aydin.setFamily("family");
-		aydin.setAge(30);
+		aydin.setAge(20);
 		
 		
 		Aydin aydin2 = new Aydin();
 		aydin2.setName("aydin");
 		aydin2.setFamily("family");
-		aydin2.setAge(28);
-		
+		aydin2.setAge(23);
 		
 		Aydin aydin3 = new Aydin();
-		aydin3.setName("aydin2");
-		aydin3.setFamily("family2");
+		aydin3.setName("آیدین");
+		aydin3.setFamily("نصراله پور");
 		aydin3.setAge(29);
 		
 		
@@ -37,8 +36,10 @@ public class Application {
 		aydins.add(aydin3);
 		aydins.add(aydin3);
 		
-		new SexelWriter().setFilePath("a.xlsx").addSheetData(aydins).addSheetData(aydins).write();
+//		new SexelWriter().setFilePath("a.xlsx").addSheetData(aydins).write();
 		
 		
+		
+		new SexelReader().setFilePath("a.xlsx").setOutputClass(Aydin.class).setSheetName("Aydin").doRead().forEach(System.out::println);
 	}
 }
