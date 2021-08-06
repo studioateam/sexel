@@ -3,11 +3,14 @@ package net.aydini.sexel.writer;
 import java.lang.reflect.Field;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
 import net.aydini.mom.util.reflection.ReflectionUtil;
 import net.aydini.sexel.annotation.SexelField;
+import net.aydini.sexel.configuration.ConfigurationProperty;
+import net.aydini.sexel.exception.SexelException;
 import net.aydini.sexel.workbook.WorkBookHolder;
 
 /**
@@ -15,34 +18,61 @@ import net.aydini.sexel.workbook.WorkBookHolder;
  * @author <a href="mailto:hi@aydini.net">Aydin Nasrollahpour </a>
  *
  */
-public class RowWriter {
+public class RowWriter extends AbstractWriter<Object> {
 
 	private final Row row;
 
-	private final WorkBookHolder workBookHolder;
+	private Object rowData;
 
-	RowWriter(Row row, WorkBookHolder workBookHolder) {
-		super();
+	private Set<Field> fields;
+
+	private boolean isHeader = false;
+
+	private WorkBookHolder workBookHolder;
+
+	RowWriter(ConfigurationProperty configurationProperty, Row row) {
+		super(configurationProperty);
 		this.row = row;
-		this.workBookHolder = workBookHolder;
 	}
 
-	public void write(Set<Field> fields, Object rowData,boolean isHeader)  {
+	public RowWriter setWorkBookHolder(WorkBookHolder workBookHolder) {
+		this.workBookHolder = workBookHolder;
+		return this;
+	}
+
+	public RowWriter setIsheader(boolean isheader) {
+		this.isHeader = isheader;
+		return this;
+	}
+
+	public RowWriter setFields(Set<Field> fields) {
+		this.fields = fields;
+		return this;
+	}
+
+	public RowWriter setRowData(Object rowData) {
+		this.rowData = rowData;
+		return this;
+	}
+
+	protected void doWrite() throws Exception {
 		for (Field field : fields) {
 			Cell cell = row.createCell(field.getAnnotation(SexelField.class).columnIndex());
-			new CellWriter(cell, workBookHolder).write(field, getCellValue(field, rowData, isHeader),isHeader);
+			new CellWriter(getConfigurationProperty(), cell).setWorkBookHolder(workBookHolder).setField(field).setIsheader(isHeader)
+					.setCellValue(getCellValue(field, rowData, isHeader)).write();
 		}
 	}
 
 	private Object getCellValue(Field field, Object rowData, boolean isHeader) {
-		if (isHeader)
-			return null;
+		if (isHeader) {
+			String headerTitle = field.getAnnotation(SexelField.class).headerTitle();
+			return StringUtils.isNotEmpty(headerTitle) ? headerTitle : field.getName();
+		}
 		try {
 			return ReflectionUtil.getFieldValueFromObject(field, rowData);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new SexelException(e.getMessage(), e);
 		}
-		return null;
 	}
 
 }

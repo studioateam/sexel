@@ -11,6 +11,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import net.aydini.mom.util.reflection.ReflectionUtil;
 import net.aydini.sexel.configuration.ConfigurationProperty;
 import net.aydini.sexel.configuration.ConfigurationProperty.Direction;
+import net.aydini.sexel.exception.SexelException;
 import net.aydini.sexel.workbook.WorkBookHolder;
 
 /**
@@ -18,66 +19,59 @@ import net.aydini.sexel.workbook.WorkBookHolder;
  * @author <a href="mailto:hi@aydini.net">Aydin Nasrollahpour </a>
  *
  */
-public class SheetWriter {
-	
-	
+public class SheetWriter extends AbstractWriter<List<Object>> {
 
 	private final Sheet sheet;
 
-	private final WorkBookHolder workBookHolder;
+	private WorkBookHolder workBookHolder;
 
 	private List<Object> sheetData;
-	
-	private ConfigurationProperty configurationProperty;
-	
+
 	AtomicInteger rowNnumber;
 
-	SheetWriter(WorkBookHolder workBookHolder, Sheet sheet) {
-		this.workBookHolder = workBookHolder;
+	SheetWriter(ConfigurationProperty configurationProperty, Sheet sheet) {
+		super(configurationProperty);
 		this.sheet = sheet;
 	}
-	
-	public SheetWriter setSheetData(List<Object> sheetData)
-	{
+
+	public SheetWriter setSheetData(List<Object> sheetData) {
 		this.sheetData = sheetData;
 		return this;
 	}
-	
-	
-	public SheetWriter setConfigurationProperty(ConfigurationProperty configurationProperty)
-	{
-		this.configurationProperty = configurationProperty;
+
+	public SheetWriter setWorkBookHolder(WorkBookHolder workBookHolder) {
+		this.workBookHolder = workBookHolder;
 		return this;
 	}
-	
 
-	public void write() {
+	protected void doWrite() throws Exception {
 		configSheet();
 		final Set<Field> fields = ReflectionUtil.getClassFields(sheetData.get(0).getClass());
-		if(!configurationProperty.isSkipHeader())
+		if (!getConfigurationProperty().isSkipHeader())
 			writeHeader(fields, rowNnumber.getAndIncrement());
-		sheetData.stream().forEach(item->writeData(fields,item,rowNnumber.getAndIncrement()));
+		sheetData.stream().forEach(item -> writeData(fields, item, rowNnumber.getAndIncrement()));
 	}
 
 	private void writeHeader(Set<Field> fields, int rowIndex) {
 		Row headerRow = sheet.createRow(rowIndex);
-		new RowWriter(headerRow, workBookHolder).write(fields,null,true);
+		new RowWriter(getConfigurationProperty(), headerRow).setWorkBookHolder(workBookHolder).setFields(fields).setIsheader(true).write();
 	}
 
-	private  void writeData(Set<Field> fields, Object data, int rowIndex) {
+	private void writeData(Set<Field> fields, Object data, int rowIndex) {
 		try {
 			Row dataRow = sheet.createRow(rowIndex);
-			new RowWriter(dataRow, workBookHolder).write(fields, data,false);
+			new RowWriter(getConfigurationProperty(), dataRow).setWorkBookHolder(workBookHolder).setFields(fields).setRowData(data).write();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			throw new SexelException(e.getMessage(), e);
 		}
 	}
-	
-	private void configSheet()
-	{
-		rowNnumber = new AtomicInteger(configurationProperty.getStartRow());
-		if(configurationProperty.getDirection()==Direction.RTL)
+
+	private void configSheet() {
+		rowNnumber = new AtomicInteger(getConfigurationProperty().getStartRow());
+		if (getConfigurationProperty().getDirection() == Direction.RTL)
 			sheet.setRightToLeft(true);
+		else
+			sheet.setRightToLeft(false);
 	}
 
 }

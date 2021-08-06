@@ -2,12 +2,13 @@ package net.aydini.sexel.writer;
 
 import java.lang.reflect.Field;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 
 import net.aydini.mom.util.reflection.ReflectionUtil;
 import net.aydini.sexel.annotation.SexelField;
 import net.aydini.sexel.cache.CellCache;
+import net.aydini.sexel.configuration.ConfigurationProperty;
 import net.aydini.sexel.workbook.WorkBookHolder;
 
 /**
@@ -15,33 +16,52 @@ import net.aydini.sexel.workbook.WorkBookHolder;
  * @author <a href="mailto:hi@aydini.net">Aydin Nasrollahpour </a>
  *
  */
-public class CellWriter {
+public class CellWriter extends AbstractWriter<Object>{
 
 
 	private CellCache cache = CellCache.getInstance();
 	
 	private final Cell cell;
 	
-	private final WorkBookHolder workBookHolder;
+	private WorkBookHolder workBookHolder;
+	
+	private Field field;
+	
+	private Object cellValue;
+	
+	private boolean isHeader =false;
 	
 	
-	CellWriter(Cell cell, WorkBookHolder workBookHolder) {
-		super();
+	CellWriter( ConfigurationProperty configurationProperty,Cell cell) {
+		super(configurationProperty);
 		this.cell = cell;
-		this.workBookHolder = workBookHolder;
 	}
 
 
-
+	public CellWriter setWorkBookHolder(WorkBookHolder workBookHolder) {
+		this.workBookHolder = workBookHolder;
+		return this;
+	}
 	
-	public void write(Field field,Object cellValue,boolean isHeader)
+	public CellWriter setCellValue(Object cellValue) {
+		this.cellValue = cellValue;
+		return this;
+	}
+	
+	public CellWriter setField(Field field) {
+		this.field = field;
+		return this;
+	}
+	public CellWriter setIsheader(boolean isHeader) {
+		this.isHeader = isHeader;
+		return this;
+	}
+	
+	protected void doWrite()
 	{
 		SexelField sexelField = field.getAnnotation(SexelField.class);
 		cache(field,sexelField);
-		if(isHeader)
-			cellValue =StringUtils.isNotEmpty(sexelField.headerTitle()) ? sexelField.headerTitle() : field.getName();
-		cell.setCellStyle(
-				cache.getStyle(field.getName()).getCellStyle(workBookHolder, cache.getFont(field.getName())));
+		cell.setCellStyle(getStyle());
 		try {
 			cell.setCellValue(ReflectionUtil.instantiate(sexelField.converter()).map(cellValue));
 		} catch (Exception e) {
@@ -49,6 +69,15 @@ public class CellWriter {
 		} 
 	}
 	
+	
+	private CellStyle getStyle()
+	{
+		if(isHeader)
+			return cache.getStyle(field.getName()).getHeaderCellStyle(workBookHolder, cache.getFont(field.getName()));
+		else
+			return cache.getStyle(field.getName()).getCellStyle(workBookHolder, cache.getFont(field.getName()));
+			
+	}
 	
 	private void cache(Field field,SexelField sexelField)
 	{

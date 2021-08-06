@@ -23,79 +23,59 @@ import net.aydini.sexel.workbook.WorkBookHolder;
  * @author <a href="mailto:hi@aydini.net">Aydin Nasrollahpour </a>
  *
  */
-public class SexelWriter {
+public class SexelWriter extends AbstractWriter<List<Object>> {
 
 	private Workbook workbook;
-
-	private ConfigurationProperty ConfigurationProperty = new ConfigurationProperty();
 
 	private Map<String, List<Object>> sheetData;
 
 	private String filePath;
 
 	public SexelWriter() {
+		this(new ConfigurationProperty());
+	}
+
+	public SexelWriter(ConfigurationProperty ConfigurationProperty) {
+		super(ConfigurationProperty);
 		sheetData = new HashedMap<>();
 	}
 
 	public SexelWriter setFilePath(String filePath) {
 		this.filePath = filePath;
-		validateFilePath();
-		return this;
-	}
-
-	public SexelWriter setConfigurationProperty(ConfigurationProperty configurationProperty) {
-		if (configurationProperty != null)
-			this.ConfigurationProperty = configurationProperty;
 		return this;
 	}
 
 	@SuppressWarnings("unchecked")
 	public <T> SexelWriter addSheetData(String sheetName, List<T> data) {
-		validateData(data);
-		if (StringUtils.isEmpty(sheetName))
-			addSheetData(data);
-		else
-			sheetData.put(sheetName, (List<Object>)data);
-		return this;
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T> SexelWriter addSheetData(List<T> data) {
-		validateData(data);
-		String sheetName = data.get(0).getClass().getSimpleName();
-		if (sheetData.isEmpty())
-			sheetData.put(sheetName, (List<Object>) data);
-		else
-			sheetData.put(sheetName + (sheetData.size() + 1), (List<Object>) data);
-		return this;
-	}
-
-	private <T> void validateData(List<T> data) {
 		if (CollectionUtils.isEmpty(data))
 			throw new SexelException("empty Data");
+		sheetName = StringUtils.isNotEmpty(sheetName) ? sheetName : data.get(0).getClass().getSimpleName();
+		if (sheetData.get(sheetName) != null)
+			sheetName = sheetName + (sheetData.size() + 1);
+		sheetData.put(sheetName, (List<Object>) data);
+		return this;
 	}
 
-	private void validateFilePath() {
+	public <T> SexelWriter addSheetData(List<T> data) {
+		return addSheetData(null, data);
+	}
+
+	private void validate() {
 		if (StringUtils.isAllEmpty(filePath))
 			throw new SexelException("invalid file path");
 		String fileExtention = FilenameUtils.getExtension(filePath).toLowerCase();
 		if (!(fileExtention.equals(Constants.XLSX_FORMAT) || fileExtention.equals(Constants.XLS_FORMAT)))
 			throw new SexelException("only .xlsx and .xls is supported");
-	}
-
-	private void validate() {
-		validateFilePath();
 		if (sheetData.isEmpty())
 			throw new SexelException("empty Data");
 	}
 
-	public void write() throws Exception {
+	protected void doWrite() throws Exception {
 		validate();
 		initWorkbook();
 		setDataToSheet();
 		workbook.write(new FileOutputStream(new File(filePath)));
 		workbook.close();
-
 	}
 
 	private void initWorkbook() {
@@ -110,10 +90,10 @@ public class SexelWriter {
 	}
 
 	private void setDataToSheet() {
-		WorkBookHolder workBookHolder = new WorkBookHolder(workbook);
+
 		sheetData.entrySet().stream()
-				.map(item -> new SheetWriter(workBookHolder, workbook.createSheet(item.getKey()))
-						.setConfigurationProperty(ConfigurationProperty).setSheetData(item.getValue()))
+				.map(item -> new SheetWriter(getConfigurationProperty(), workbook.createSheet(item.getKey()))
+						.setWorkBookHolder(new WorkBookHolder(workbook)).setSheetData(item.getValue()))
 				.forEach(SheetWriter::write);
 	}
 
