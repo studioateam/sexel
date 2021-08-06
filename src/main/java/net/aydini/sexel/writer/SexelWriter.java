@@ -11,9 +11,11 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import net.aydini.sexel.configuration.ConfigurationProperty;
 import net.aydini.sexel.constant.Constants;
+import net.aydini.sexel.exception.SexelException;
 import net.aydini.sexel.workbook.WorkBookHolder;
 
 /**
@@ -70,20 +72,21 @@ public class SexelWriter {
 
 	private <T> void validateData(List<T> data) {
 		if (CollectionUtils.isEmpty(data))
-			throw new RuntimeException("empty Data");
+			throw new SexelException("empty Data");
 	}
 
 	private void validateFilePath() {
 		if (StringUtils.isAllEmpty(filePath))
-			throw new RuntimeException("invalid file path");
-		if (!FilenameUtils.getExtension(filePath).toLowerCase().equals(Constants.ACCEPTABLE_EXCEL_TYPE))
-			throw new RuntimeException("only .xlsx is supported");
+			throw new SexelException("invalid file path");
+		String fileExtention = FilenameUtils.getExtension(filePath).toLowerCase();
+		if (!(fileExtention.equals(Constants.XLSX_FORMAT) || fileExtention.equals(Constants.XLS_FORMAT)))
+			throw new SexelException("only .xlsx and .xls is supported");
 	}
 
 	private void validate() {
 		validateFilePath();
 		if (sheetData.isEmpty())
-			throw new RuntimeException("empty Data");
+			throw new SexelException("empty Data");
 	}
 
 	public void write() throws Exception {
@@ -97,9 +100,12 @@ public class SexelWriter {
 
 	private void initWorkbook() {
 		try {
-			this.workbook = new HSSFWorkbook();
+			if (FilenameUtils.getExtension(filePath).toLowerCase().equals(Constants.XLS_FORMAT))
+				workbook = new HSSFWorkbook();
+			else
+				workbook = new XSSFWorkbook();
 		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage(), e);
+			throw new SexelException(e.getMessage(), e);
 		}
 	}
 

@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import net.aydini.sexel.configuration.ConfigurationProperty;
 import net.aydini.sexel.constant.Constants;
@@ -63,15 +64,32 @@ public class SexelReader extends AbstractReader<List<Object>> {
 	private void validate() {
 		if (StringUtils.isAllEmpty(filePath))
 			throw new SexelException("invalid file path");
-		if (!FilenameUtils.getExtension(filePath).toLowerCase().equals(Constants.ACCEPTABLE_EXCEL_TYPE))
-			throw new SexelException("only .xlsx is supported");
+		String fileExtention = FilenameUtils.getExtension(filePath).toLowerCase();
+		if (!(fileExtention.equals(Constants.XLSX_FORMAT) || fileExtention.equals(Constants.XLS_FORMAT)))
+			throw new SexelException("only .xlsx and .xls is supported");
 	}
 
 	public List<Object> doRead() {
 		validate();
 		initWorkBook();
 		List<Object> list = new ArrayList<>();
+		if (sheetsNames.isEmpty())
+			return doReadAllSheets();
+
 		sheetsNames.forEach(item -> list.addAll(doRead(item)));
+
+		return list;
+	}
+
+	private List<Object> doReadAllSheets() {
+
+		List<Object> list = new ArrayList<>();
+		int numberOfSheets = workbook.getNumberOfSheets();
+		for (int i = 0; i < numberOfSheets; i++) {
+			Sheet sheet = workbook.getSheetAt(i);
+			list.addAll(doRead(sheet.getSheetName()));
+
+		}
 		return list;
 	}
 
@@ -83,7 +101,10 @@ public class SexelReader extends AbstractReader<List<Object>> {
 
 	private void initWorkBook() {
 		try {
-			workbook = new HSSFWorkbook(new FileInputStream(new File(filePath)));
+			if (FilenameUtils.getExtension(filePath).toLowerCase().equals(Constants.XLS_FORMAT))
+				workbook = new HSSFWorkbook(new FileInputStream(new File(filePath)));
+			else
+				workbook = new XSSFWorkbook(new FileInputStream(new File(filePath)));
 		} catch (IOException e) {
 			throw new SexelException(e.getMessage(), e);
 		}

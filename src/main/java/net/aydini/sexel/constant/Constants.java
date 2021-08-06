@@ -11,5 +11,7 @@ public class Constants {
 	
 	public final static String DEFAULT_FONT_NAME= "Arial";
 	
-	public final static String ACCEPTABLE_EXCEL_TYPE = "xlsx";
+	public final static String XLSX_FORMAT = "xlsx";
+	
+	public final static String XLS_FORMAT = "xlsx";
 }
