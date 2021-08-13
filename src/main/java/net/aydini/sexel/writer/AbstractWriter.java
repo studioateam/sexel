@@ -3,7 +3,7 @@ package net.aydini.sexel.writer;
 import net.aydini.sexel.configuration.ConfigurationProperty;
 import net.aydini.sexel.exception.SexelException;
 
-public abstract class AbstractWriter<T> {
+public abstract class AbstractWriter {
 
 	private final ConfigurationProperty configurationProperty;
 

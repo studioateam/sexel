@@ -2,7 +2,7 @@ package net.aydini.sexel.workbook.style;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 
-import net.aydini.sexel.workbook.WorkBookHolder;
+import net.aydini.sexel.workbook.WorkbookHolder;
 import net.aydini.sexel.workbook.style.font.FontCreator;
 
 /**
@@ -12,7 +12,7 @@ import net.aydini.sexel.workbook.style.font.FontCreator;
  */
 public interface CellStyler {
 
-	public CellStyle getCellStyle(WorkBookHolder workBookHolder, FontCreator fontCreator);
+	public CellStyle getCellStyle(WorkbookHolder workBookHolder, FontCreator fontCreator);
 	
-	public CellStyle getHeaderCellStyle(WorkBookHolder workBookHolder,FontCreator fontCreator);
+	public CellStyle getHeaderCellStyle(WorkbookHolder workBookHolder,FontCreator fontCreator);
 }

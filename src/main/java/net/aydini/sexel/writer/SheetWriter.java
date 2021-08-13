@@ -12,18 +12,18 @@ import net.aydini.mom.util.reflection.ReflectionUtil;
 import net.aydini.sexel.configuration.ConfigurationProperty;
 import net.aydini.sexel.configuration.ConfigurationProperty.Direction;
 import net.aydini.sexel.exception.SexelException;
-import net.aydini.sexel.workbook.WorkBookHolder;
+import net.aydini.sexel.workbook.WorkbookHolder;
 
 /**
  * 
  * @author <a href="mailto:hi@aydini.net">Aydin Nasrollahpour </a>
  *
  */
-public class SheetWriter extends AbstractWriter<List<Object>> {
+public class SheetWriter extends AbstractWriter {
 
 	private final Sheet sheet;
 
-	private WorkBookHolder workBookHolder;
+	private WorkbookHolder workBookHolder;
 
 	private List<Object> sheetData;
 
@@ -39,7 +39,7 @@ public class SheetWriter extends AbstractWriter<List<Object>> {
 		return this;
 	}
 
-	public SheetWriter setWorkBookHolder(WorkBookHolder workBookHolder) {
+	public SheetWriter setWorkBookHolder(WorkbookHolder workBookHolder) {
 		this.workBookHolder = workBookHolder;
 		return this;
 	}

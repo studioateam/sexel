@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.Row;
 import net.aydini.mom.util.reflection.ReflectionUtil;
 import net.aydini.sexel.annotation.SexelField;
 import net.aydini.sexel.configuration.ConfigurationProperty;
+import net.aydini.sexel.exception.SexelException;
 
 /**
  * 
@@ -52,7 +53,7 @@ public class RowReader extends AbstractReader<Object> {
 		Optional<Field> primitiveField = outputClassFields.parallelStream().filter(item -> item.getType().isPrimitive())
 				.findAny();
 		if (primitiveField.isPresent())
-			throw new RuntimeException(
+			throw new SexelException(
 					"premitive field is not allowed : " + outputClass.getName() + "." + primitiveField.get().getName());
 	}
 

@@ -4,7 +4,7 @@ import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 
-import net.aydini.sexel.workbook.WorkBookHolder;
+import net.aydini.sexel.workbook.WorkbookHolder;
 import net.aydini.sexel.workbook.style.font.FontCreator;
 
 /**
@@ -15,7 +15,7 @@ import net.aydini.sexel.workbook.style.font.FontCreator;
 public class DefaultCellStyler implements CellStyler {
 
 	@Override
-	public CellStyle getCellStyle(WorkBookHolder workBookHolder, FontCreator fontCreator) {
+	public CellStyle getCellStyle(WorkbookHolder workBookHolder, FontCreator fontCreator) {
 		CellStyle cellStyle = init(workBookHolder);
 		cellStyle.setFont(fontCreator.createCellFont(workBookHolder));
 		cellStyle.setBorderBottom(BorderStyle.THIN);
@@ -26,7 +26,7 @@ public class DefaultCellStyler implements CellStyler {
 
 	}
 
-	public CellStyle getHeaderCellStyle(WorkBookHolder workBookHolder, FontCreator fontCreator) {
+	public CellStyle getHeaderCellStyle(WorkbookHolder workBookHolder, FontCreator fontCreator) {
 		CellStyle cellStyle = init(workBookHolder);
 		cellStyle.setFont(fontCreator.createHeaderCellFont(workBookHolder));
 		cellStyle.setBorderBottom(BorderStyle.MEDIUM);
@@ -36,7 +36,7 @@ public class DefaultCellStyler implements CellStyler {
 		return cellStyle;
 	}
 
-	private CellStyle init(WorkBookHolder workBookHolder) {
+	private CellStyle init(WorkbookHolder workBookHolder) {
 		if (workBookHolder == null)
 			throw new RuntimeException("");
 		CellStyle cellStyle = workBookHolder.createCellStyle();

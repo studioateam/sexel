@@ -11,14 +11,14 @@ import net.aydini.mom.util.reflection.ReflectionUtil;
 import net.aydini.sexel.annotation.SexelField;
 import net.aydini.sexel.configuration.ConfigurationProperty;
 import net.aydini.sexel.exception.SexelException;
-import net.aydini.sexel.workbook.WorkBookHolder;
+import net.aydini.sexel.workbook.WorkbookHolder;
 
 /**
  * 
  * @author <a href="mailto:hi@aydini.net">Aydin Nasrollahpour </a>
  *
  */
-public class RowWriter extends AbstractWriter<Object> {
+public class RowWriter extends AbstractWriter {
 
 	private final Row row;
 
@@ -28,14 +28,14 @@ public class RowWriter extends AbstractWriter<Object> {
 
 	private boolean isHeader = false;
 
-	private WorkBookHolder workBookHolder;
+	private WorkbookHolder workBookHolder;
 
 	RowWriter(ConfigurationProperty configurationProperty, Row row) {
 		super(configurationProperty);
 		this.row = row;
 	}
 
-	public RowWriter setWorkBookHolder(WorkBookHolder workBookHolder) {
+	public RowWriter setWorkBookHolder(WorkbookHolder workBookHolder) {
 		this.workBookHolder = workBookHolder;
 		return this;
 	}
@@ -58,7 +58,7 @@ public class RowWriter extends AbstractWriter<Object> {
 	protected void doWrite() throws Exception {
 		for (Field field : fields) {
 			Cell cell = row.createCell(field.getAnnotation(SexelField.class).columnIndex());
-			new CellWriter(getConfigurationProperty(), cell).setWorkBookHolder(workBookHolder).setField(field).setIsheader(isHeader)
+			new CellWriter(getConfigurationProperty(), cell).setWorkBookHolder(workBookHolder).setField(field).setIsHeader(isHeader)
 					.setCellValue(getCellValue(field, rowData, isHeader)).write();
 		}
 	}

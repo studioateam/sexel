@@ -16,14 +16,14 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import net.aydini.sexel.configuration.ConfigurationProperty;
 import net.aydini.sexel.constant.Constants;
 import net.aydini.sexel.exception.SexelException;
-import net.aydini.sexel.workbook.WorkBookHolder;
+import net.aydini.sexel.workbook.WorkbookHolder;
 
 /**
  * 
  * @author <a href="mailto:hi@aydini.net">Aydin Nasrollahpour </a>
  *
  */
-public class SexelWriter extends AbstractWriter<List<Object>> {
+public class SexelWriter extends AbstractWriter {
 
 	private Workbook workbook;
 
@@ -93,7 +93,7 @@ public class SexelWriter extends AbstractWriter<List<Object>> {
 
 		sheetData.entrySet().stream()
 				.map(item -> new SheetWriter(getConfigurationProperty(), workbook.createSheet(item.getKey()))
-						.setWorkBookHolder(new WorkBookHolder(workbook)).setSheetData(item.getValue()))
+						.setWorkBookHolder(new WorkbookHolder(workbook)).setSheetData(item.getValue()))
 				.forEach(SheetWriter::write);
 	}
 

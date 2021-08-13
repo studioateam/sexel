@@ -4,7 +4,7 @@ import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Font;
 
 import net.aydini.sexel.constant.Constants;
-import net.aydini.sexel.workbook.WorkBookHolder;
+import net.aydini.sexel.workbook.WorkbookHolder;
 
 /**
  * 
@@ -14,21 +14,21 @@ import net.aydini.sexel.workbook.WorkBookHolder;
 public class DefaultFontCreator implements FontCreator {
 
 	@Override
-	public Font createCellFont(WorkBookHolder workHolder) {
+	public Font createCellFont(WorkbookHolder workHolder) {
 		Font font = init(workHolder);
 		font.setColor(HSSFColor.HSSFColorPredefined.BLACK.getIndex());
 		return font;
 	}
 
 	@Override
-	public Font createHeaderCellFont(WorkBookHolder workHolder) {
+	public Font createHeaderCellFont(WorkbookHolder workHolder) {
 		Font font = init(workHolder);
 		font.setBold(true);
 		font.setColor(HSSFColor.HSSFColorPredefined.RED.getIndex());
 		return font;
 	}
 
-	private Font init(WorkBookHolder workHolder) {
+	private Font init(WorkbookHolder workHolder) {
 		Font font = workHolder.createFont();
 		font.setFontName(Constants.DEFAULT_FONT_NAME);
 		return font;
