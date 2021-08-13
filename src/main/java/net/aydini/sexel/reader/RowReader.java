@@ -39,7 +39,7 @@ public class RowReader extends AbstractReader<Object> {
 		Set<Field> outputClassFields = ReflectionUtil.getClassFields(outputClass);
 		validate(outputClassFields);
 		final Object object = ReflectionUtil.instantiate(outputClass);
-		outputClassFields.stream().filter(item->item.isAnnotationPresent(SexelField.class)).forEach(item->doRead(item,object));
+		outputClassFields.stream().filter(item->item.isAnnotationPresent(SexelField.class)).parallel().forEach(item->doRead(item,object));
 		return object;
 	}
 	private void doRead(Field field,Object object)

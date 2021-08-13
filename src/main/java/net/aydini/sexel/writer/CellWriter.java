@@ -71,8 +71,9 @@ public class CellWriter extends AbstractWriter{
 		cache(field,sexelField);
 		cell.setCellStyle(getStyle());
 		try {
-			Object mapedCellValue = MapperCache.getInstance().getMaper(sexelField.converter()).map(cellValue);
-			setValue(mapedCellValue);
+			if(!isHeader)
+				cellValue = MapperCache.getInstance().getMaper(sexelField.converter()).map(cellValue);
+			setValue(cellValue);
 		} catch (Exception e) {
 			throw new SecurityException(e.getMessage(),e);
 		} 

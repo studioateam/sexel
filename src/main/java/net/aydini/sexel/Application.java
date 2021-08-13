@@ -36,11 +36,70 @@ public class Application {
 		aydins.add(aydin3);
 		aydins.add(aydin3);
 		aydins.add(aydin3);
+		aydins.add(aydin2);
+		aydins.add(aydin);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin2);
+		aydins.add(aydin);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin2);
+		aydins.add(aydin);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin2);
+		aydins.add(aydin);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin2);
+		aydins.add(aydin);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin2);
+		aydins.add(aydin);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin2);
+		aydins.add(aydin);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin2);
+		aydins.add(aydin);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin2);
+		aydins.add(aydin);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin2);
+		aydins.add(aydin);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin2);
+		aydins.add(aydin);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
+		aydins.add(aydin3);
 		
+		Long start = System.currentTimeMillis();
 		new SexelWriter().setFilePath("a.xlsx").addSheetData(aydins).addSheetData(aydins).write();
+		System.out.println(System.currentTimeMillis() - start);
 		
 		
 		
+		start = System.currentTimeMillis();
 		new SexelReader().setFilePath("a.xlsx").setOutputClass(Aydin.class).setSheetName("Aydin").setSheetName("Aydin2").doRead().forEach(System.out::println);
+		System.out.println(System.currentTimeMillis() - start);
 	}
 }

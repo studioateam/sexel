@@ -56,11 +56,11 @@ public class RowWriter extends AbstractWriter {
 	}
 
 	protected void doWrite() throws Exception {
-		for (Field field : fields) {
+		fields.parallelStream().forEach(field ->{
 			Cell cell = row.createCell(field.getAnnotation(SexelField.class).columnIndex());
 			new CellWriter(getConfigurationProperty(), cell).setWorkBookHolder(workBookHolder).setField(field).setIsHeader(isHeader)
 					.setCellValue(getCellValue(field, rowData, isHeader)).write();
-		}
+		});
 	}
 
 	private Object getCellValue(Field field, Object rowData, boolean isHeader) {
