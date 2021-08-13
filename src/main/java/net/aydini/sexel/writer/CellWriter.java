@@ -14,6 +14,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import net.aydini.mom.util.reflection.ReflectionUtil;
 import net.aydini.sexel.annotation.SexelField;
 import net.aydini.sexel.cache.CellStyleCache;
+import net.aydini.sexel.cache.MapperCache;
 import net.aydini.sexel.configuration.ConfigurationProperty;
 import net.aydini.sexel.workbook.WorkbookHolder;
 
@@ -70,7 +71,7 @@ public class CellWriter extends AbstractWriter{
 		cache(field,sexelField);
 		cell.setCellStyle(getStyle());
 		try {
-			Object mapedCellValue = ReflectionUtil.instantiate(sexelField.converter()).map(cellValue);
+			Object mapedCellValue = MapperCache.getInstance().getMaper(sexelField.converter()).map(cellValue);
 			setValue(mapedCellValue);
 		} catch (Exception e) {
 			throw new SecurityException(e.getMessage(),e);

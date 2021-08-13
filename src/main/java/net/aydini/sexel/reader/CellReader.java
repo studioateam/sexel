@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import net.aydini.mom.common.service.maper.Maper;
 import net.aydini.mom.util.reflection.ReflectionUtil;
 import net.aydini.sexel.annotation.SexelField;
+import net.aydini.sexel.cache.MapperCache;
 import net.aydini.sexel.configuration.ConfigurationProperty;
 import net.aydini.sexel.exception.SexelException;
 
@@ -45,8 +46,7 @@ public class CellReader extends AbstractReader<Object> {
 	        try {
 	            Class<? extends Maper> mapper = field.getAnnotation(SexelField.class).converter();
 	            Object cellValue = CellValueExtractor.extractCellValue( field.getType(),cell);
-	            if(!mapper.equals(Maper.class))
-	                cellValue=ReflectionUtil.instantiate(mapper).map(cellValue);
+	            cellValue=MapperCache.getInstance().getMaper(mapper).map(cellValue);
 	            ReflectionUtil.setFieldValueToObject(field, mapedObject, cellValue);
 	            return cellValue;
 	        } catch (Exception e) {
