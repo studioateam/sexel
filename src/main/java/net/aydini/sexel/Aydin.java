@@ -14,7 +14,7 @@ public class Aydin {
 	private String family;
 	
 	
-	@SexelField(columnIndex = 2 ,headerTitle = "age_h",converter = ObjectToIntegerMaper.class)
+	@SexelField(columnIndex = 2 ,headerTitle = "age_h",readConverter  = ObjectToIntegerMaper.class)
 	private Integer age;
 	
 

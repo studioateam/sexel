@@ -16,15 +16,46 @@ import net.aydini.sexel.workbook.style.font.FontCreator;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SexelField {
 	
+	
+	/**
+	 *  index of column to be read/write. starting from 0.
+	 */
 	int columnIndex();
 	
+	
+	/**
+	 * title of header cell.
+	 */
 	String headerTitle() default "";
 	
-	@SuppressWarnings("rawtypes")
-	Class<? extends Maper> converter() default VoidMaper.class;
 	
+	/**
+	 *  converts annotated field value using this maper class and then sets final value to field.
+	 * @see ObjectToStringMaper, ObjectToLongMaper, ObjectToIntegerMaper
+	 */
+	@SuppressWarnings("rawtypes")
+	Class<? extends Maper> readConverter() default VoidMaper.class;
+	
+	
+	/**
+	 * 
+	 * converts annotated field value using this maper class and then sets final value to cell.
+	 * @see ObjectToStringMaper, ObjectToLongMaper, ObjectToIntegerMaper
+	 */
+	@SuppressWarnings("rawtypes")
+	Class<? extends Maper> writeConverter() default VoidMaper.class;
+	
+	/**
+	 * 
+	 * this will be used for setting style (borders,background color etc) to both header and data cells
+	 */
 	Class<? extends CellStyler> style() default DefaultCellStyler.class;
 	
+	
+	/**
+	 * 
+	 * this will be used for setting font (font,size,color etc) to both header and data cells
+	 */
 	Class<? extends FontCreator> font() default DefaultFontCreator.class;
 	
 }

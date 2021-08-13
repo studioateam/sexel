@@ -44,7 +44,7 @@ public class CellReader extends AbstractReader<Object> {
 	 @SuppressWarnings({ "unchecked", "rawtypes" })
 	protected Object doRead() {
 	        try {
-	            Class<? extends Maper> mapper = field.getAnnotation(SexelField.class).converter();
+	            Class<? extends Maper> mapper = field.getAnnotation(SexelField.class).readConverter();
 	            Object cellValue = CellValueExtractor.extractCellValue( field.getType(),cell);
 	            cellValue=MapperCache.getInstance().getMaper(mapper).map(cellValue);
 	            ReflectionUtil.setFieldValueToObject(field, mapedObject, cellValue);
