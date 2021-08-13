@@ -9,12 +9,12 @@ import org.apache.poi.ss.usermodel.Workbook;
  * @author <a href="mailto:hi@aydini.net">Aydin Nasrollahpour </a>
  *
  */
-public class WorkBookHolder {
+public class WorkbookHolder {
 
 	private final Workbook workBook;
 	
 	
-	public WorkBookHolder(Workbook workBook)
+	public WorkbookHolder(Workbook workBook)
 	{
 		this.workBook = workBook;
 	}
