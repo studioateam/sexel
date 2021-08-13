@@ -1,6 +1,7 @@
 package net.aydini.sexel;
 
 import net.aydini.sexel.annotation.SexelField;
+import net.aydini.sexel.converter.ObjectToIntegerMaper;
 
 public class Aydin {
 
@@ -13,7 +14,7 @@ public class Aydin {
 	private String family;
 	
 	
-	@SexelField(columnIndex = 2 ,headerTitle = "age_h")
+	@SexelField(columnIndex = 2 ,headerTitle = "age_h",converter = ObjectToIntegerMaper.class)
 	private Integer age;
 	
 
