@@ -4,8 +4,11 @@ import java.lang.reflect.Field;
 
 import org.apache.poi.ss.usermodel.Cell;
 
+import net.aydini.mom.common.service.maper.Maper;
 import net.aydini.mom.util.reflection.ReflectionUtil;
+import net.aydini.sexel.annotation.SexelField;
 import net.aydini.sexel.configuration.ConfigurationProperty;
+import net.aydini.sexel.exception.SexelException;
 
 /**
  * 
@@ -37,10 +40,18 @@ public class CellReader extends AbstractReader<Object> {
 		this.mapedObject=mapedObject;
 		return this;
 	}
-	public Object doRead() {
-		Object cellValue = CellValueExtractor.extractCellValue(field.getType(), cell);
-		ReflectionUtil.setFieldValueToObject(field, mapedObject, cellValue);
-		return cellValue;
-	}
+	 @SuppressWarnings({ "unchecked", "rawtypes" })
+	protected Object doRead() {
+	        try {
+	            Class<? extends Maper> mapper = field.getAnnotation(SexelField.class).converter();
+	            Object cellValue = CellValueExtractor.extractCellValue( field.getType(),cell);
+	            if(!mapper.equals(Maper.class))
+	                cellValue=ReflectionUtil.instantiate(mapper).map(cellValue);
+	            ReflectionUtil.setFieldValueToObject(field, mapedObject, cellValue);
+	            return cellValue;
+	        } catch (Exception e) {
+	            throw new SexelException(e.getMessage(),e);
+	        }
+	    }
 
 }

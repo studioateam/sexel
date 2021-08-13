@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import net.aydini.mom.common.service.maper.Maper;
-import net.aydini.mom.util.mapper.ToStringMapper;
+import net.aydini.sexel.converter.VoidMaper;
 import net.aydini.sexel.workbook.style.CellStyler;
 import net.aydini.sexel.workbook.style.DefaultCellStyler;
 import net.aydini.sexel.workbook.style.font.DefaultFontCreator;
@@ -20,7 +20,8 @@ public @interface SexelField {
 	
 	String headerTitle() default "";
 	
-	Class<? extends Maper<Object, String>> converter() default ToStringMapper.class;
+	@SuppressWarnings("rawtypes")
+	Class<? extends Maper> converter() default VoidMaper.class;
 	
 	Class<? extends CellStyler> style() default DefaultCellStyler.class;
 	
