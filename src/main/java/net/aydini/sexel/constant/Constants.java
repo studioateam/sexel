@@ -13,5 +13,5 @@ public class Constants {
 	
 	public final static String XLSX_FORMAT = "xlsx";
 	
-	public final static String XLS_FORMAT = "xlsx";
+	public final static String XLS_FORMAT = "xls";
 }
