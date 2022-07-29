@@ -17,11 +17,11 @@ import net.aydini.sexel.exception.SexelException;
  * @author <a href="mailto:hi@aydini.net">Aydin Nasrollahpour </a>
  *
  */
-public class RowReader extends AbstractReader<Object> {
+public class RowReader<T> extends AbstractReader<T> {
 
 	private final Row row;
 
-	private Class<?> outputClass;
+	private Class<T> outputClass;
 	
 
 	RowReader(Row row, ConfigurationProperty configurationProperty) {
@@ -29,16 +29,16 @@ public class RowReader extends AbstractReader<Object> {
 		this.row = row;
 	}
 	
-	public RowReader setOutputClass(Class<?> outputClass)
+	public RowReader<T> setOutputClass(Class<T> outputClass)
 	{
 		this.outputClass = outputClass;
 		return this;
 	}
 
-	public Object doRead() {
+	public T doRead() {
 		Set<Field> outputClassFields = ReflectionUtil.getClassFields(outputClass);
 		validate(outputClassFields);
-		final Object object = ReflectionUtil.instantiate(outputClass);
+		final T object = ReflectionUtil.instantiate(outputClass);
 		outputClassFields.stream().filter(item->item.isAnnotationPresent(SexelField.class)).parallel().forEach(item->doRead(item,object));
 		return object;
 	}
