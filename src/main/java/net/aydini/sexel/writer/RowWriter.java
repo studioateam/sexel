@@ -1,6 +1,7 @@
 package net.aydini.sexel.writer;
 
 import java.lang.reflect.Field;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -14,7 +15,7 @@ import net.aydini.sexel.exception.SexelException;
 import net.aydini.sexel.workbook.WorkbookHolder;
 
 /**
- * 
+ *
  * @author <a href="mailto:hi@aydini.net">Aydin Nasrollahpour </a>
  *
  */
@@ -56,10 +57,15 @@ public class RowWriter extends AbstractWriter {
 	}
 
 	protected void doWrite() throws Exception {
-		fields.parallelStream().forEach(field ->{
-			Cell cell = row.createCell(field.getAnnotation(SexelField.class).columnIndex());
-			new CellWriter(getConfigurationProperty(), cell).setWorkBookHolder(workBookHolder).setField(field).setIsHeader(isHeader)
-					.setCellValue(getCellValue(field, rowData, isHeader)).write();
+		fields.forEach(field ->{
+			SexelField sexelField = field.getAnnotation(SexelField.class);
+			if (sexelField != null) {
+				Cell cell = row.createCell(sexelField.columnIndex());
+				new CellWriter(getConfigurationProperty(), cell).setWorkBookHolder(workBookHolder)
+						.setField(field).setIsHeader(isHeader)
+						.setCellValue(getCellValue(field, rowData, isHeader))
+						.write();
+			}
 		});
 	}
 
